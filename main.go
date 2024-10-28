@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"bufio"
+	"strings"
 
-	"github.com/dekuu5/dfa-validator/utils"
 	"github.com/dekuu5/dfa-validator/dfa"
+	"github.com/dekuu5/dfa-validator/utils"
 )
 
 func main() {
@@ -27,6 +29,33 @@ func main() {
         log.Fatalf("Error validating the dfa")
 		os.Exit(-1)
 	}
+	printDfaJson(dfaJson)
+
+	
+	
+	// loop to get the input string
+	reader := bufio.NewReader(os.Stdin)
+    fmt.Print("Enter a string to validate using the DFA: ")
+    
+    // Read input until newline and trim any extra whitespace
+    input, err := reader.ReadString('\n')
+    if err != nil {
+        fmt.Println("Error reading input:", err)
+        return
+    }
+
+    // Remove the newline character from the end of the input
+	symbols := []rune(strings.TrimSpace(input))
+
+	fmt.Println(symbols)
+    
+    fmt.Println("You entered:", input)
+
+	
+}
+
+
+func printDfaJson(dfaJson dfa.JsonDfa){
 	fmt.Printf("States: %v\n", dfaJson.States)
 	fmt.Printf("Symbols: %v\n", dfaJson.Symbols)
 	fmt.Printf("Start State: %s\n", dfaJson.StartState)

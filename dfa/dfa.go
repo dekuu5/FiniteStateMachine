@@ -1,5 +1,7 @@
 package dfa
 
+// import "github.com/dekuu5/dfa-validator/utils"
+
 
 
 type StateNode struct {
@@ -17,3 +19,9 @@ type DFA struct {
 	StartState *StateNode 
     AcceptStates []string
 }
+
+
+// FIRST MAKE A CONSTRCOOR
+//      chage     Transitions  map[string]map[sting]string to     Transitions  map[string]map[rune]string
+//      make te dfa struct 
+//      mk
