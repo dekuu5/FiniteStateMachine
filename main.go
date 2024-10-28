@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/dekuu5/dfa-validator/utils"
+	"github.com/dekuu5/dfa-validator/dfa"
 )
 
 func main() {
@@ -20,18 +21,18 @@ func main() {
 	}
 
 	// Read the DFA from the provided JSON file
-	dfa := utils.ReadJson(*filePath)
-	valid := utils.ValidateDfa(dfa)
+	dfaJson := utils.ReadJson(*filePath)
+	valid := dfa.ValidateDfa(dfaJson)
 	if !valid {
         log.Fatalf("Error validating the dfa")
 		os.Exit(-1)
 	}
-	fmt.Printf("States: %v\n", dfa.States)
-	fmt.Printf("Symbols: %v\n", dfa.Symbols)
-	fmt.Printf("Start State: %s\n", dfa.StartState)
-	fmt.Printf("Accept States: %v\n", dfa.AcceptStates)
+	fmt.Printf("States: %v\n", dfaJson.States)
+	fmt.Printf("Symbols: %v\n", dfaJson.Symbols)
+	fmt.Printf("Start State: %s\n", dfaJson.StartState)
+	fmt.Printf("Accept States: %v\n", dfaJson.AcceptStates)
 	fmt.Println("Transitions:")
-	for state, transitions := range dfa.Transitions {
+	for state, transitions := range dfaJson.Transitions {
 		fmt.Printf("  %s: %v\n", state, transitions)
 	}
 }
