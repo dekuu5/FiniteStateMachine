@@ -48,9 +48,14 @@ func main() {
 	symbols := []rune(strings.TrimSpace(input))
 
 	fmt.Println(symbols)
-    
-    fmt.Println("You entered:", input)
 
+	dfaTree := dfa.Constructor(dfaJson)
+
+	fmt.Println(dfaTree)
+	fmt.Println("Transitions:")
+	for state, transitions := range dfaTree.Transitions {
+		fmt.Printf("  %s: %v\n", state, transitions)
+	}
 	
 }
 

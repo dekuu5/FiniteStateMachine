@@ -7,6 +7,9 @@ import (
 
 type JsonDfa = utils.JsonDfa
 
+
+
+
 func ValidateDfa(dfa JsonDfa) bool {
 	return validateStates(dfa) &&
 		validateStartState(dfa) &&
@@ -14,6 +17,7 @@ func ValidateDfa(dfa JsonDfa) bool {
 		validateAcceptStates(dfa) &&
 		validateTransitions(dfa)
 }
+
 
 func validateStates(dfa JsonDfa) bool {
 	if len(dfa.States) == 0 {
