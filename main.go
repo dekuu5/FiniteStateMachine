@@ -51,10 +51,11 @@ func main() {
 
 	dfaTree := dfa.Constructor(dfaJson)
 
-	fmt.Println(dfaTree)
-	fmt.Println("Transitions:")
-	for state, transitions := range dfaTree.Transitions {
-		fmt.Printf("  %s: %v\n", state, transitions)
+	if valid := dfaTree.ValidateString(symbols); valid {
+		fmt.Printf("String %s is accepted\n", input)
+
+	}else {
+		fmt.Printf("String %s is rejected\n", input)
 	}
 	
 }
