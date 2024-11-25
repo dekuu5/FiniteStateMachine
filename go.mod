@@ -1,3 +1,3 @@
-module github.com/dekuu5/dfa-validator
+module github.com/dekuu5/FiniteStateMachine
 
 go 1.22.5

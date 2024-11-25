@@ -1,5 +1,4 @@
-package dfa
-
+package nfa
 import (
 	"fmt"
 	
@@ -16,7 +15,7 @@ type StateNode struct {
 
 
 
-type DFA struct {
+type NFA struct {
     States       []string
     Symbols     []rune
     Transitions  map[string]map[rune]string
@@ -51,7 +50,7 @@ func constructNodes(jsonInput utils.FiniteAutomata) *StateNode {
     return nodes[jsonInput.StartState]
 
 }
-func Constructor(jsonInput utils.FiniteAutomata) *DFA {
+func Constructor(jsonInput utils.FiniteAutomata) *NFA {
     transitions := make(map[string]map[rune]string)
     for state , transition := range jsonInput.Transitions {
         t := make(map[rune]string)
@@ -73,7 +72,7 @@ func Constructor(jsonInput utils.FiniteAutomata) *DFA {
                 fmt.Printf("Skipping key '%s' because it's not a single character\n", c)
         }
     }
-    dfa := &DFA{
+    nfa := &NFA{
         States: jsonInput.States,
         Symbols: symbols,
         Transitions: transitions,
@@ -82,6 +81,6 @@ func Constructor(jsonInput utils.FiniteAutomata) *DFA {
     }
     
 
-    return dfa
+    return nfa
     
 }

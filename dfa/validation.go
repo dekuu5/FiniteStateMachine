@@ -2,15 +2,15 @@ package dfa
 
 import (
 	"log"
-	"github.com/dekuu5/dfa-validator/utils"
+	"github.com/dekuu5/FiniteStateMachine/utils"
 )
 
-type JsonDfa = utils.JsonDfa
+type FiniteAutomata = utils.FiniteAutomata
 
 
 
 
-func ValidateDfa(dfa JsonDfa) bool {
+func ValidateDfa(dfa FiniteAutomata) bool {
 	return validateStates(dfa) &&
 		validateStartState(dfa) &&
 		validateSymbols(dfa) &&
@@ -19,7 +19,7 @@ func ValidateDfa(dfa JsonDfa) bool {
 }
 
 
-func validateStates(dfa JsonDfa) bool {
+func validateStates(dfa FiniteAutomata) bool {
 	if len(dfa.States) == 0 {
 		log.Println("Set of states is empty")
 		return false
@@ -27,7 +27,7 @@ func validateStates(dfa JsonDfa) bool {
 	return true
 }
 
-func validateStartState(dfa JsonDfa) bool {
+func validateStartState(dfa FiniteAutomata) bool {
 	for _, state := range dfa.States {
 		if state == dfa.StartState {
 			return true
@@ -37,7 +37,7 @@ func validateStartState(dfa JsonDfa) bool {
 	return false
 }
 
-func validateSymbols(dfa JsonDfa) bool {
+func validateSymbols(dfa FiniteAutomata) bool {
 	if len(dfa.Symbols) == 0 {
 		log.Println("Set of inputs is empty")
 		return false
@@ -45,7 +45,7 @@ func validateSymbols(dfa JsonDfa) bool {
 	return true
 }
 
-func validateAcceptStates(dfa JsonDfa) bool {
+func validateAcceptStates(dfa FiniteAutomata) bool {
 	if len(dfa.AcceptStates) == 0 {
 		log.Println("Set of accepted states is empty")
 		return false
@@ -59,7 +59,7 @@ func validateAcceptStates(dfa JsonDfa) bool {
 	return true
 }
 
-func validateTransitions(dfa JsonDfa) bool {
+func validateTransitions(dfa FiniteAutomata) bool {
 	for state, transitions := range dfa.Transitions {
 		if !stateExists(dfa.States, state) {
 			log.Printf("State %s in transition table is not in the set of states", state)

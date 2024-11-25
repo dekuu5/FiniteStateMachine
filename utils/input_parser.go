@@ -8,7 +8,7 @@ import (
 )
 
 
-type JsonDfa struct {
+type FiniteAutomata struct {
 	States      []string                       `json:"states"`
 	Symbols     []string                       `json:"symbols"`
 	StartState  string                         `json:"start_state"`
@@ -17,7 +17,7 @@ type JsonDfa struct {
 }
 
 
-func ReadJson(fileName string) JsonDfa {
+func ReadJson(fileName string) FiniteAutomata {
 	file , err := os.Open(fileName)
 	if err != nil {
 		log.Fatalf("Error opening file: %v", err)
@@ -30,12 +30,12 @@ func ReadJson(fileName string) JsonDfa {
 		log.Fatalf("Error reading file: %v", err)
 		os.Exit(-1)
 	}
-	var dfa JsonDfa;
-	err = json.Unmarshal(fileBytes, &dfa);
+	var finiteAutomata FiniteAutomata;
+	err = json.Unmarshal(fileBytes, &finiteAutomata);
 	if err != nil {
 		log.Fatalf("Error parsing json: %v", err)
 		os.Exit(-1)
 	}
-	return dfa
+	return finiteAutomata
 }
 
