@@ -9,7 +9,7 @@ import (
 
 type StateNode struct {
     StateName   string
-    Transitions map[rune]*StateNode
+    Transitions map[rune][]*StateNode
     IsAccepting bool               
 }
 
@@ -23,12 +23,12 @@ type NFA struct {
     AcceptStates []string
 }
 
-func constructNodes(jsonInput utils.FiniteAutomata) *StateNode {
+func constructNodes(jsonInput utils.NFiniteAutomata) *StateNode {
     nodes := make(map[string]*StateNode)
     for _, state := range jsonInput.States {
         nodes[state] = &StateNode{
             StateName:   state,
-            Transitions: make(map[rune]*StateNode),
+            Transitions: make(map[rune][]*StateNode),
             IsAccepting: false,
         }
     }
@@ -40,9 +40,11 @@ func constructNodes(jsonInput utils.FiniteAutomata) *StateNode {
     }
 
     for state, transition := range jsonInput.Transitions {
-        for symbol, targetState := range transition {
+        for symbol, targetStates := range transition {
             if len(symbol) == 1 {
-                nodes[state].Transitions[rune(symbol[0])] = nodes[targetState]
+                for _, targetState := range targetStates {
+                    nodes[state].Transitions[rune(symbol[0])] = nodes[targetState]
+                }
             }
         }
     }
@@ -50,13 +52,15 @@ func constructNodes(jsonInput utils.FiniteAutomata) *StateNode {
     return nodes[jsonInput.StartState]
 
 }
-func Constructor(jsonInput utils.FiniteAutomata) *NFA {
+func Constructor(jsonInput utils.NFiniteAutomata) *NFA {
     transitions := make(map[string]map[rune]string)
     for state , transition := range jsonInput.Transitions {
         t := make(map[rune]string)
         for k, m := range transition {
         if len(k) == 1 {
-                t[rune(k[0])] = m
+                for _, targetState := range m {
+                    t[rune(k[0])] = targetState
+                }
             } else {
                 fmt.Printf("Skipping key '%s' because it's not a single character\n", k)
         }

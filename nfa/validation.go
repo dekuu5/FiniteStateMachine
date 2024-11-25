@@ -5,7 +5,7 @@ import (
 	"github.com/dekuu5/FiniteStateMachine/utils"
 )
 
-type FiniteAutomata = utils.FiniteAutomata
+type NFiniteAutomata = utils.NFiniteAutomata
 
 // ValidateNfa validates the given NFA based on the following rules:
 // 1. The set of states must not be empty.
@@ -13,7 +13,7 @@ type FiniteAutomata = utils.FiniteAutomata
 // 3. The set of input symbols must not be empty.
 // 4. The set of accept states must not be empty and must be a subset of the set of states.
 // 5. Each state must have transitions defined for each input symbol, and the next states must be in the set of states.
-func ValidateNfa(nfa FiniteAutomata) bool {
+func ValidateNfa(nfa utils.NFiniteAutomata) bool {
 	return validateStates(nfa) &&
 		validateStartState(nfa) &&
 		validateSymbols(nfa) &&
@@ -21,7 +21,7 @@ func ValidateNfa(nfa FiniteAutomata) bool {
 		validateTransitions(nfa)
 }
 
-func validateStates(nfa FiniteAutomata) bool {
+func validateStates(nfa NFiniteAutomata) bool {
 	if len(nfa.States) == 0 {
 		log.Println("Set of states is empty")
 		return false
@@ -29,7 +29,7 @@ func validateStates(nfa FiniteAutomata) bool {
 	return true
 }
 
-func validateStartState(nfa FiniteAutomata) bool {
+func validateStartState(nfa NFiniteAutomata) bool {
 	for _, state := range nfa.States {
 		if state == nfa.StartState {
 			return true
@@ -39,7 +39,7 @@ func validateStartState(nfa FiniteAutomata) bool {
 	return false
 }
 
-func validateSymbols(nfa FiniteAutomata) bool {
+func validateSymbols(nfa NFiniteAutomata) bool {
 	if len(nfa.Symbols) == 0 {
 		log.Println("Set of inputs is empty")
 		return false
@@ -47,7 +47,7 @@ func validateSymbols(nfa FiniteAutomata) bool {
 	return true
 }
 
-func validateAcceptStates(nfa FiniteAutomata) bool {
+func validateAcceptStates(nfa NFiniteAutomata) bool {
 	if len(nfa.AcceptStates) == 0 {
 		log.Println("Set of accepted states is empty")
 		return false
@@ -61,7 +61,7 @@ func validateAcceptStates(nfa FiniteAutomata) bool {
 	return true
 }
 
-func validateTransitions(nfa FiniteAutomata) bool {
+func validateTransitions(nfa NFiniteAutomata) bool {
 	for state, transitions := range nfa.Transitions {
 		if !stateExists(nfa.States, state) {
 			log.Printf("State %s in transition table is not in the set of states", state)
@@ -73,7 +73,7 @@ func validateTransitions(nfa FiniteAutomata) bool {
 				return false
 			}
 			for _, nextState := range nextStates {
-				if !stateExists(nfa.States, string(nextState)) {
+				if !stateExists(nfa.States, nextState) {
 					log.Printf("Next state %s in transition table for state %s is not in the set of states", string(nextState), state)
 					return false
 				}
