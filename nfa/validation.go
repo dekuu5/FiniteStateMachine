@@ -2,6 +2,7 @@ package nfa
 
 import (
 	"log"
+
 	"github.com/dekuu5/FiniteStateMachine/utils"
 )
 
@@ -85,7 +86,7 @@ func validateTransitions(nfa NFiniteAutomata) bool {
 
 func stateExists(states []string, state string) bool {
 	for _, s := range states {
-		if s == state {
+		if s == state { // if the state exists in the set of states
 			return true
 		}
 	}
