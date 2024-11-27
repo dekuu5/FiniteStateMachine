@@ -1,11 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"log"
 	"os"
-	"bufio"
 	"strings"
 
 	"github.com/dekuu5/FiniteStateMachine/dfa"
@@ -25,11 +25,12 @@ func main() {
 	}
 
 	// Read the automaton from the provided JSON file
-	automatonJson := utils.ReadJson(*filePath)
-
+	
 	// Validate and process based on the automaton type
 	switch strings.ToLower(*automatonType) {
 	case "dfa":
+		automatonJson := utils.ReadJson(*filePath)
+
 		if valid := dfa.ValidateDfa(automatonJson); !valid {
 			log.Fatalf("Error validating the DFA")
 			os.Exit(-1)
@@ -37,6 +38,15 @@ func main() {
 		// printDfaJson(automatonJson)
 		processDfa(automatonJson)
 	case "nfa":
+		automatonJson := utils.ReadJsonNfa(*filePath)
+		fmt.Printf("States: %v\n", automatonJson.States)
+		fmt.Printf("Symbols: %v\n", automatonJson.Symbols)
+		fmt.Printf("Start State: %v\n", automatonJson.StartState)
+		fmt.Printf("Accept States: %v\n", automatonJson.AcceptStates)
+		fmt.Println("Transitions:")
+		for state, transitions := range automatonJson.Transitions {
+			fmt.Printf("  %s: %v\n", state, transitions)
+		}
 		if valid := nfa.ValidateNfa(automatonJson); !valid {
 			log.Fatalf("Error validating the NFA")
 			os.Exit(-1)
@@ -75,7 +85,7 @@ func processDfa(dfaJson dfa.FiniteAutomata) {
 	}
 }
 
-func processNfa(nfaJson nfa.FiniteAutomata) {
+func processNfa(nfaJson nfa.NFiniteAutomata) {
 	// Loop to get the input string
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Enter a string to validate using the NFA: ")
