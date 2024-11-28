@@ -116,6 +116,7 @@ func printDfa(dfaJson dfa.DFA) {
 	}
 }
 
+// a problem with this function is that it doesn't print the format correctly
 func printNfa(nfaJson nfa.NFA) {
 	fmt.Printf("States: %v\n", nfaJson.States)
 	fmt.Printf("Symbols: %v\n", nfaJson.Symbols)
