@@ -96,7 +96,7 @@ func Constructor(jsonInput utils.NFiniteAutomata) *NFA {
 					t[rune(k[0])] = append(t[rune(k[0])], targetState) // append the target state to the transitions of the state
 				}
 			} else {
-				fmt.Printf("Skipping key '%s' because it's not a single character\n", k) // i think this is a bug
+				fmt.Printf("Skipping key '%s' because it's not a single character\n", k) // i think this is a bug //throw "Skipping key 'ε' because it's not a single character" error
 			}
 			transitions[state] = t
 		}
@@ -107,7 +107,7 @@ func Constructor(jsonInput utils.NFiniteAutomata) *NFA {
 		if len(c) == 1 {
 			symbols = append(symbols, rune(c[0])) // append the rune to the symbols slice
 		} else {
-			fmt.Printf("Skipping key '%s' because it's not a single character\n", c) // i think this is a bug
+			fmt.Printf("Skipping key '%s' because it's not a single character\n", c) // i think this is a bug //throw "Skipping key 'ε' because it's not a single character" error
 		}
 	}
 	// create a NFA struct
