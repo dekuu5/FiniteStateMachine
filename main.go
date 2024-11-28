@@ -25,7 +25,7 @@ func main() {
 	}
 
 	// Read the automaton from the provided JSON file
-	
+
 	// Validate and process based on the automaton type
 	switch strings.ToLower(*automatonType) {
 	case "dfa":
@@ -38,20 +38,13 @@ func main() {
 		// printDfaJson(automatonJson)
 		processDfa(automatonJson)
 	case "nfa":
+		fmt.Println("NFA")
 		automatonJson := utils.ReadJsonNfa(*filePath)
-		fmt.Printf("States: %v\n", automatonJson.States)
-		fmt.Printf("Symbols: %v\n", automatonJson.Symbols)
-		fmt.Printf("Start State: %v\n", automatonJson.StartState)
-		fmt.Printf("Accept States: %v\n", automatonJson.AcceptStates)
-		fmt.Println("Transitions:")
-		for state, transitions := range automatonJson.Transitions {
-			fmt.Printf("  %s: %v\n", state, transitions)
-		}
 		if valid := nfa.ValidateNfa(automatonJson); !valid {
 			log.Fatalf("Error validating the NFA")
 			os.Exit(-1)
 		}
-		// printNfaJson(automatonJson)
+
 		processNfa(automatonJson)
 	default:
 		log.Fatalf("Unknown automaton type: %s", *automatonType)
@@ -123,13 +116,14 @@ func printDfa(dfaJson dfa.DFA) {
 	}
 }
 
+// a problem with this function is that it doesn't print the format correctly
 func printNfa(nfaJson nfa.NFA) {
 	fmt.Printf("States: %v\n", nfaJson.States)
 	fmt.Printf("Symbols: %v\n", nfaJson.Symbols)
 	fmt.Printf("Start State: %v\n", nfaJson.StartState)
 	fmt.Printf("Accept States: %v\n", nfaJson.AcceptStates)
 	fmt.Println("Transitions:")
-	for state, transitions := range nfaJson.Transitions {
-		fmt.Printf("  %s: %v\n", state, transitions)
+	for _, state := range nfaJson.States {
+		fmt.Printf("  %s: %v\n", state, nfaJson.Transitions[state])
 	}
 }
