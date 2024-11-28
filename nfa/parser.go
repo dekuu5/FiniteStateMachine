@@ -7,9 +7,11 @@ import (
 
 func (nfa *NFA) ValidateString(input string) bool {
 	tree := nfa.ParseTree(input)
+	//check if the tree is nil
 	if tree == nil {
-		return false
+		return false // the is no path in the tree
 	}
+	//initialize the queue
 	queue := list.New()
 
 	//initialize the queue with the input symbols
@@ -18,35 +20,39 @@ func (nfa *NFA) ValidateString(input string) bool {
 	}
 	// helper function to traverse the tree
 	// and check if the last node is an accepting state
-	var traverseTree func(currentNode *StateNode, PreviousSymbol rune) bool
-	traverseTree = func(currentNode *StateNode, PreviousSymbol rune) bool {
+	var traverseTree func(currentNode *StateNode) bool
+	traverseTree = func(currentNode *StateNode) bool {
 
 		if queue.Len() == 0 {
-			if currentNode.IsAccepting {
-				return true
-			}
-			return false
+			return currentNode.IsAccepting
 
 		}
 		//get the current symbol
 		currentSymbol := queue.Front().Value.(rune)
-		queue.Remove(queue.Front())
 		// check if the current symbol has no next node in the tree
 		// the branch is ended and the input string is still not finished
 		if currentNode.Transitions[currentSymbol] == nil {
 			return false
 		}
 
-		for _, childNode := range currentNode.Transitions[currentSymbol] {
-			return traverseTree(childNode, currentSymbol)
+		for symbol, childNodes := range currentNode.Transitions {
+			if symbol == currentSymbol { // if the symbol is the epsilon symbol continue to the next symbol
+				queue.Remove(queue.Front()) // remove the current symbol from the queue
+			}
+			for _, childNode := range childNodes {
+				if traverseTree(childNode) { // if the child node is an accepting state
+					return true // return true and stop the traversal
+				}
+				continue // continue to the next child node if the current child node is not an accepting state
+
+			}
+
 		}
-		// handle epsilon transitions
-		for _, childNode := range currentNode.Transitions['ε'] {
-			return traverseTree(childNode, PreviousSymbol)
-		}
+
 		return false
 	}
-	return traverseTree(tree, 'ε')
+	// start traversing the tree from the start state
+	return traverseTree(tree)
 }
 func (nfa *NFA) ParseTree(input string) *StateNode {
 	queue := list.New()
