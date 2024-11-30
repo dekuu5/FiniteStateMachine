@@ -36,6 +36,7 @@ func main() {
 			os.Exit(-1)
 		}
 		// printDfaJson(automatonJson)
+
 		processDfa(automatonJson)
 	case "nfa":
 		fmt.Println("NFA")
@@ -44,7 +45,9 @@ func main() {
 			log.Fatalf("Error validating the NFA")
 			os.Exit(-1)
 		}
+		// nfaTree := nfa.Constructor(automatonJson)
 
+		// printNfa(*nfaTree)
 		processNfa(automatonJson)
 	default:
 		log.Fatalf("Unknown automaton type: %s", *automatonType)
