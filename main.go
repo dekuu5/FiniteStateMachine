@@ -36,7 +36,7 @@ func main() {
 			os.Exit(-1)
 		}
 		// printDfaJson(automatonJson)
-
+		
 		processDfa(automatonJson)
 	case "nfa":
 		fmt.Println("NFA")
@@ -46,7 +46,9 @@ func main() {
 			os.Exit(-1)
 		}
 		// nfaTree := nfa.Constructor(automatonJson)
+		// nfaTree := nfa.Constructor(automatonJson)
 
+		// printNfa(*nfaTree)
 		// printNfa(*nfaTree)
 		processNfa(automatonJson)
 	default:
@@ -101,6 +103,11 @@ func processNfa(nfaJson nfa.NFiniteAutomata) {
 	nfaTree := nfa.Constructor(nfaJson)
 
 	printNfa(*nfaTree)
+	if valid := nfaTree.ValidateStringDac(symbols); valid {
+		fmt.Printf("String %s is accepted\n", input)
+	} else {
+		fmt.Printf("String %s is rejected\n", input)
+	}
 	if valid := nfaTree.ValidateStringDac(symbols); valid {
 		fmt.Printf("String %s is accepted\n", input)
 	} else {
