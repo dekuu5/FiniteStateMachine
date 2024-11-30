@@ -1,7 +1,6 @@
 package nfa
 
 import (
-	"container/list"
 	"fmt"
 )
 
@@ -12,34 +11,33 @@ func (nfa *NFA) ValidateString(input string) bool {
 		return false // the is no path in the tree
 	}
 	//initialize the queue
-	queue := list.New()
+	queue := NewQueue()
 
 	//initialize the queue with the input symbols
 	for _, symbol := range input {
-		queue.PushBack(rune(symbol))
+		queue.Enqueue(rune(symbol))
 	}
 	// helper function to traverse the tree
 	// and check if the last node is an accepting state
 	var traverseTree func(currentNode *StateNode) bool
 	traverseTree = func(currentNode *StateNode) bool {
-
-		if queue.Len() == 0 {
-			return currentNode.IsAccepting
-
-		}
 		//get the current symbol
-		currentSymbol := queue.Front().Value.(rune)
-		// check if the current symbol has no next node in the tree
-		// the branch is ended and the input string is still not finished
-		if currentNode.Transitions[currentSymbol] == nil {
-			return false
-		}
-
+		currentSymbol := queue.Front().(rune)
+		fmt.Println("currentSymbol", currentSymbol)
+		// loop through the transitions of the current node
 		for symbol, childNodes := range currentNode.Transitions {
 			if symbol == currentSymbol { // if the symbol is the epsilon symbol continue to the next symbol
-				queue.Remove(queue.Front()) // remove the current symbol from the queue
+				queue.Dequeue() // remove the current symbol from the queue
 			}
 			for _, childNode := range childNodes {
+				if childNode == nil {
+					if queue.IsEmpty() {
+						return currentNode.IsAccepting // if the queue is empty and the child node is nil return the current node accepting state
+					} else {
+						return false
+					}
+
+				}
 				if traverseTree(childNode) { // if the child node is an accepting state
 					return true // return true and stop the traversal
 				}
@@ -55,11 +53,11 @@ func (nfa *NFA) ValidateString(input string) bool {
 	return traverseTree(tree)
 }
 func (nfa *NFA) ParseTree(input string) *StateNode {
-	queue := list.New()
+	queue := NewQueue()
 
 	//initialize the queue with the input symbols
 	for _, symbol := range input {
-		queue.PushBack(rune(symbol))
+		queue.Enqueue(rune(symbol))
 	}
 
 	// Recursive helper function to build the tree
@@ -68,12 +66,12 @@ func (nfa *NFA) ParseTree(input string) *StateNode {
 	buildTree = func(currentState *StateNode) *StateNode {
 
 		//base case: when the current symbol is queue is empty
-		if queue.Len() == 0 {
+		if queue.IsEmpty() {
 			return nil
 		}
 		//get the current symbol
-		currentSymbol := queue.Front().Value.(rune)
-		queue.Remove(queue.Front())
+		currentSymbol := queue.Front().(rune)
+		queue.Dequeue()
 
 		//base case: when the current state is nil or there is no transition for the current symbol
 		if currentState == nil || nfa.Transitions[currentState.StateName][currentSymbol] == nil {

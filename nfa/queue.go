@@ -34,3 +34,10 @@ func (q *Queue) Copy() *Queue {
 	newQueue.items = append(newQueue.items, q.items...)
 	return newQueue
 }
+
+func (q *Queue) Front() interface{} {
+	if len(q.items) == 0 {
+		return nil
+	}
+	return q.items[0]
+}
