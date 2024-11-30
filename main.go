@@ -96,16 +96,14 @@ func processNfa(nfaJson nfa.NFiniteAutomata) {
 
 	// Remove the newline character from the end of the input
 	symbols := strings.TrimSpace(input)
-
-	fmt.Println(symbols)
 	//check if the symbols is in language
 
 	printNfa(*nfaTree)
 
 	if valid := nfaTree.ValidateString(symbols); valid {
-		fmt.Printf("String %s is accepted\n", input)
+		fmt.Printf("String %s is accepted\n", symbols)
 	} else {
-		fmt.Printf("String %s is rejected\n", input)
+		fmt.Printf("String %s is rejected\n", symbols)
 	}
 }
 
@@ -123,11 +121,12 @@ func printDfa(dfaJson dfa.DFA) {
 // a problem with this function is that it doesn't print the format correctly
 func printNfa(nfaJson nfa.NFA) {
 	fmt.Printf("States: %v\n", nfaJson.States)
-	fmt.Printf("Symbols: %v\n", nfaJson.Symbols)
-	fmt.Printf("Start State: %v\n", nfaJson.StartState)
+	fmt.Printf("Symbols: %v\n", string(nfaJson.Symbols))
+	fmt.Printf("Start State: %v\n", nfaJson.StartState.StateName)
 	fmt.Printf("Accept States: %v\n", nfaJson.AcceptStates)
 	fmt.Println("Transitions:")
 	for _, state := range nfaJson.States {
+		// print the transitions of the state
 		fmt.Printf("  %s: %v\n", state, nfaJson.Transitions[state])
 	}
 }
