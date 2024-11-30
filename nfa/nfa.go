@@ -92,6 +92,7 @@ func Constructor(jsonInput utils.NFiniteAutomata) *NFA {
 		t := make(map[rune][]string)
 		// loop through the transitions of each state
 		// fmt.Println(transition)
+		// fmt.Println(transition)
 		for k, m := range transition {
 			fmt.Println(k,[]rune(k))
 			if len(k) == 1 {
@@ -111,6 +112,7 @@ func Constructor(jsonInput utils.NFiniteAutomata) *NFA {
 		if len(c) == 1 {
 			symbols = append(symbols, rune(c[0])) // append the rune to the symbols slice
 		} else {
+			fmt.Printf("Skipping key '%s' because it's not a single sqs character\n", c) // i think this is a bug //throw "Skipping key 'ε' because it's not a single character" error
 			fmt.Printf("Skipping key '%s' because it's not a single sqs character\n", c) // i think this is a bug //throw "Skipping key 'ε' because it's not a single character" error
 		}
 	}
