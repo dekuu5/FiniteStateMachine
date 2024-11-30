@@ -79,6 +79,7 @@ func processDfa(dfaJson dfa.FiniteAutomata) {
 }
 
 func processNfa(nfaJson nfa.NFiniteAutomata) {
+	nfaTree := nfa.Constructor(nfaJson)
 	// Loop to get the input string
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Enter a string to validate using the NFA: ")
@@ -91,18 +92,18 @@ func processNfa(nfaJson nfa.NFiniteAutomata) {
 	}
 
 	// Remove the newline character from the end of the input
-	symbols := []rune(strings.TrimSpace(input))
+	symbols := strings.TrimSpace(input)
 
 	fmt.Println(symbols)
-
-	nfaTree := nfa.Constructor(nfaJson)
+	//check if the symbols is in language
 
 	printNfa(*nfaTree)
-	// if valid := nfaTree.ValidateString(symbols); valid {
-	// 	fmt.Printf("String %s is accepted\n", input)
-	// } else {
-	// 	fmt.Printf("String %s is rejected\n", input)
-	// }
+
+	if valid := nfaTree.ValidateString(symbols); valid {
+		fmt.Printf("String %s is accepted\n", input)
+	} else {
+		fmt.Printf("String %s is rejected\n", input)
+	}
 }
 
 func printDfa(dfaJson dfa.DFA) {
