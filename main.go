@@ -38,12 +38,10 @@ func main() {
 	case "dfa":
 		fmt.Println("DFA")
 		automatonJson := utils.ReadJson(*filePath)
-
 		if valid := dfa.ValidateDfa(automatonJson); !valid {
 			log.Fatalf("Error validating the DFA")
 			os.Exit(-1)
 		}
-		// printDfaJson(automatonJson)
 
 		processDfa(automatonJson)
 	case "nfa":
@@ -53,9 +51,6 @@ func main() {
 			log.Fatalf("Error validating the NFA")
 			os.Exit(-1)
 		}
-		// nfaTree := nfa.Constructor(automatonJson)
-
-		// printNfa(*nfaTree)
 		processNfa(automatonJson)
 	default:
 		log.Fatalf("Unknown automaton type: %s", *automatonType)
@@ -63,29 +58,48 @@ func main() {
 	}
 }
 
+/**
+ * description: This function processes the DFA based on the input string
+ * @param dfaJson: A FiniteAutomata struct that represents the DFA
+ */
 func processDfa(dfaJson dfa.FiniteAutomata) {
-	// Loop to get the input string
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Enter a string to validate using the DFA: ")
-
-	// Read input until newline and trim any extra whitespace
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		fmt.Println("Error reading input:", err)
-		return
-	}
-
-	// Remove the newline character from the end of the input
-	symbols := []rune(strings.TrimSpace(input))
-
-	fmt.Println(symbols)
-
+	// Construct the DFA tree
 	dfaTree := dfa.Constructor(dfaJson)
+	//print the DFA
+	dfaTree.PrintDFA()
+	// loop until the user exits
+	for {
+		// get the input string
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Print("Enter a string to validate using the DFA: ")
 
-	if valid := dfaTree.ValidateString(symbols); valid {
-		fmt.Printf("String %s is accepted\n", input)
-	} else {
-		fmt.Printf("String %s is rejected\n", input)
+		// Read input until newline and trim any extra whitespace
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+			return
+		}
+
+		// Remove the newline character from the end of the input
+		symbols := strings.TrimSpace(input)
+
+		fmt.Println(symbols)
+
+		if !dfaTree.IsInputStringValid(symbols) {
+			fmt.Println("The input string is valid")
+			return
+		}
+		if valid := dfaTree.ValidateString([]rune(symbols)); valid {
+			fmt.Printf("String %s is accepted\n", input)
+		} else {
+			fmt.Printf("String %s is rejected\n", input)
+		}
+		fmt.Println("do you want to continue? (y/n)")
+		var cont string
+		fmt.Scanln(&cont)
+		if cont == "n" {
+			break
+		}
 	}
 }
 
@@ -94,28 +108,37 @@ func processNfa(nfaJson nfa.NFiniteAutomata) {
 
 	nfaTree.PrintNFA()
 
-	// Loop to get the input string
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Enter a string to validate using the NFA: ")
+	// loop until the user exits
+	for {
+		// get the input string
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Print("Enter a string to validate using the NFA: ")
 
-	// Read input until newline and trim any extra whitespace
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		fmt.Println("Error reading input:", err)
-		return
-	}
+		// Read input until newline and trim any extra whitespace
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+			return
+		}
 
-	// Remove the newline character from the end of the input
-	symbols := strings.TrimSpace(input)
-	//check if the symbols is in language
-	if !nfaTree.IsInputStringValid(symbols) {
-		fmt.Println("The input string is valid")
-		return
-	}
+		// Remove the newline character from the end of the input
+		symbols := strings.TrimSpace(input)
+		//check if the symbols is in language
+		if !nfaTree.IsInputStringValid(symbols) {
+			fmt.Println("The input string is valid")
+			return
+		}
 
-	if valid := nfaTree.ValidateString(symbols); valid {
-		fmt.Printf("String %s is accepted\n", symbols)
-	} else {
-		fmt.Printf("String %s is rejected\n", symbols)
+		if valid := nfaTree.ValidateString(symbols); valid {
+			fmt.Printf("String %s is accepted\n", symbols)
+		} else {
+			fmt.Printf("String %s is rejected\n", symbols)
+		}
+		fmt.Println("do you want to continue? (y/n)")
+		var cont string
+		fmt.Scanln(&cont)
+		if cont == "n" {
+			break
+		}
 	}
 }

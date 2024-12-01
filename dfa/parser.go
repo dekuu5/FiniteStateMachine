@@ -9,6 +9,7 @@ package dfa
 
 import (
 	"container/list"
+	"fmt"
 )
 
 /**
@@ -44,4 +45,35 @@ func (dfaTree *DFA) ValidateString(symbols []rune) bool {
 
 	// Check if the current state is an accepting state
 	return currentNode.IsAccepting
+}
+
+/**
+ * description: This function validates the input string based on the DFA.
+ * @param inputString: A string that represents the input string
+ * @return A boolean that indicates if the input string is valid
+ */
+func (dfa *DFA) IsInputStringValid(inputString string) bool {
+	for _, char := range inputString {
+		if !containsSymbol(dfa.Symbols, char) {
+			fmt.Printf("Invalid symbol '%c' in input string\n", char)
+			return false
+		}
+	}
+	return true
+
+}
+
+/**
+ * description: Check if a character is in the set of input symbols
+ * @param symbols: A slice of runes that represents the set of input symbols
+ * @param char: A rune that represents the character to check
+ * @return A boolean that indicates if the character is in the set of input symbols
+ */
+func containsSymbol(symbols []rune, char rune) bool {
+	for _, symbol := range symbols {
+		if symbol == char {
+			return true
+		}
+	}
+	return false
 }
