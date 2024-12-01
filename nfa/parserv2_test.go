@@ -59,10 +59,18 @@ func TestValidateStringDac(t *testing.T) {
 		{nfa: nfa2, input: []rune("bc"), expected: true},
 	}
 
-	// for _, tc := range testCases {
-	// 	result := tc.nfa.ValidateStringDac(tc.input)
-	// 	if result != tc.expected {
-	// 		t.Errorf("ValidateStringDac(%q) = %v; want %v", string(tc.input), result, tc.expected)
-	// 	}
-	// }
+	for _, tc := range testCases {
+		result := tc.nfa.ValidateString(string(tc.input))
+		if result != tc.expected {
+			t.Errorf("ValidateStringDac(%q) = %v; want %v", string(tc.input), result, tc.expected)
+		}
+	}
 }
+
+//how to run the test cases in the terminal as test file is in the nfa package
+//go test -v
+//go test -v -run TestValidateStringDac
+//go test -v -run TestValidateStringDac -count=1
+//go test -v -run TestValidateStringDac -count=1 -cover
+//go test -v -run TestValidateStringDac -count=1 -coverprofile=coverage.out
+//go tool cover -html=coverage.out

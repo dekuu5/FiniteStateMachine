@@ -13,6 +13,13 @@ import (
 	"github.com/dekuu5/FiniteStateMachine/utils"
 )
 
+/**
+ * This is the main function that reads the JSON file and processes the automaton based on the type
+ * @param filePath: A string that represents the path to the JSON file
+ * @param automatonType: A string that represents the type of the automaton (DFA or NFA)
+ * @error: An error that indicates if there was an error reading the JSON file
+ */
+
 func main() {
 	// Define command-line flags for the JSON file and type (DFA or NFA)
 	filePath := flag.String("file", "", "Path to the JSON file containing the automaton")
@@ -29,6 +36,7 @@ func main() {
 	// Validate and process based on the automaton type
 	switch strings.ToLower(*automatonType) {
 	case "dfa":
+		fmt.Println("DFA")
 		automatonJson := utils.ReadJson(*filePath)
 
 		if valid := dfa.ValidateDfa(automatonJson); !valid {
@@ -83,6 +91,9 @@ func processDfa(dfaJson dfa.FiniteAutomata) {
 
 func processNfa(nfaJson nfa.NFiniteAutomata) {
 	nfaTree := nfa.Constructor(nfaJson)
+
+	nfaTree.PrintNFA()
+
 	// Loop to get the input string
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Enter a string to validate using the NFA: ")
@@ -97,8 +108,10 @@ func processNfa(nfaJson nfa.NFiniteAutomata) {
 	// Remove the newline character from the end of the input
 	symbols := strings.TrimSpace(input)
 	//check if the symbols is in language
-
-	printNfa(*nfaTree)
+	if !nfaTree.IsInputStringValid(symbols) {
+		fmt.Println("The input string is valid")
+		return
+	}
 
 	if valid := nfaTree.ValidateString(symbols); valid {
 		fmt.Printf("String %s is accepted\n", symbols)
@@ -115,18 +128,5 @@ func printDfa(dfaJson dfa.DFA) {
 	fmt.Println("Transitions:")
 	for state, transitions := range dfaJson.Transitions {
 		fmt.Printf("  %s: %v\n", state, transitions)
-	}
-}
-
-// a problem with this function is that it doesn't print the format correctly
-func printNfa(nfaJson nfa.NFA) {
-	fmt.Printf("States: %v\n", nfaJson.States)
-	fmt.Printf("Symbols: %v\n", string(nfaJson.Symbols))
-	fmt.Printf("Start State: %v\n", nfaJson.StartState.StateName)
-	fmt.Printf("Accept States: %v\n", nfaJson.AcceptStates)
-	fmt.Println("Transitions:")
-	for _, state := range nfaJson.States {
-		// print the transitions of the state
-		fmt.Printf("  %s: %v\n", state, nfaJson.Transitions[state])
 	}
 }

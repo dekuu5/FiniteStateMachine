@@ -17,37 +17,35 @@ func (nfa *NFA) ValidateString(input string) bool {
 	if tree == nil {
 		return false // the is no path in the tree
 	}
-	//initialize the queue
-	queue := NewQueue()
-
+	//initialize the stack
+	stack := NewStack()
 	//initialize the queue with the input symbols
-	for _, symbol := range input {
-		queue.Enqueue(rune(symbol))
+	for i := len(input) - 1; i >= 0; i-- {
+		stack.Push(rune(input[i]))
 	}
 	// helper function to traverse the tree
 	// and check if the last node is an accepting state
 	var traverseTree func(currentNode *treeNode) bool
 	traverseTree = func(currentNode *treeNode) bool {
-		fmt.Println("currentNode", currentNode)
-
+		poped := false
 		//base case: when the current node is an accepting state
-		if queue.IsEmpty() {
+		if stack.IsEmpty() {
 			return currentNode.accepting
 		}
 		if currentNode.children == nil {
 			return false // return false if there is no path to an accepting state
 
 		}
-		fmt.Println("queue", queue)
 		//get the current symbol
-		currentSymbol := queue.Dequeue().(rune)
-
-		fmt.Println("currentSymbol", string(currentSymbol))
+		currentSymbol := stack.Peek().(rune)
 		// loop through the transitions of the current node
 		for _, childNode := range currentNode.children {
-			if childNode.symbol == 95 {
-				fmt.Println("epsilon transition")
-				queue.Enqueue(currentSymbol)
+			if childNode.symbol != currentSymbol && childNode.symbol != 95 {
+				break
+			}
+			if childNode.symbol == currentSymbol {
+				stack.Pop() // remove the current symbol from the queue
+				poped = true
 			}
 
 			// Recursively traverse the tree for each child node
@@ -57,9 +55,9 @@ func (nfa *NFA) ValidateString(input string) bool {
 			continue // continue to the next child node if the current child node is not an accepting state
 
 		}
-
-		queue.Enqueue(currentSymbol) // add the current symbol back to the queue
-
+		if poped {
+			stack.Push(currentSymbol) // add the current symbol back to the queue
+		}
 		return false // return false if there is no path to an accepting state
 
 	}
@@ -67,11 +65,11 @@ func (nfa *NFA) ValidateString(input string) bool {
 	return traverseTree(tree)
 }
 func (nfa *NFA) ParseTree(input string) *treeNode {
-	queue := NewQueue()
-
+	//initialize the stack
+	stack := NewStack()
 	//initialize the queue with the input symbols
-	for _, symbol := range input {
-		queue.Enqueue(rune(symbol))
+	for i := len(input) - 1; i >= 0; i-- {
+		stack.Push(rune(input[i]))
 	}
 
 	// Recursive helper function to build the tree
@@ -98,11 +96,12 @@ func (nfa *NFA) ParseTree(input string) *treeNode {
 			}
 		}
 		//base case: when the current symbol is queue is empty
-		if queue.IsEmpty() {
+		if stack.IsEmpty() {
+
 			return node
 		}
 		//get the current symbol
-		currentSymbol := queue.Dequeue().(rune)
+		currentSymbol := stack.Pop().(rune)
 
 		if len(currentState.Transitions[currentSymbol]) == 0 {
 			return node
@@ -118,7 +117,7 @@ func (nfa *NFA) ParseTree(input string) *treeNode {
 				childNode.symbol = currentSymbol
 			}
 		}
-		queue.Enqueue(currentSymbol)
+		stack.Push(currentSymbol)
 		return node
 	}
 
@@ -148,16 +147,23 @@ func containsSymbol(symbols []rune, char rune) bool {
 }
 
 // print the tree for debugging purposes with tree format
-func (nfa *NFA) printTree(node *StateNode, level rune) {
-	if node == nil {
-		return
+func (node *treeNode) PrintTree() {
+	fmt.Print("Node Value: ", node.value)
+	fmt.Print(" Accepting: ", node.accepting)
+	fmt.Print(" Symbol:", string(node.symbol))
+	fmt.Print(" Children: ")
+	for _, child := range node.children {
+		child.PrintTree()
 	}
-	fmt.Printf("%s:%s\n", string(level), node.StateName)
-	for symbol, children := range node.Transitions {
-		fmt.Printf("%s -> %s\n", string(level), string(symbol))
-		for _, child := range children {
-			nfa.printTree(child, level+1)
-		}
-	}
+}
 
+func (node *treeNode) PrintTreeNode() {
+	fmt.Print("Node Value: ", node.value)
+	fmt.Print(" Accepting: ", node.accepting)
+	fmt.Print(" Symbol:", string(node.symbol))
+	fmt.Print(" Children: [")
+	for _, child := range node.children {
+		fmt.Print(" Child Value:", child.value)
+	}
+	fmt.Println(" ]")
 }

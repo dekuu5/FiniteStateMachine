@@ -92,7 +92,7 @@ func Constructor(jsonInput utils.NFiniteAutomata) *NFA {
 		// loop through the transitions of each state
 		// fmt.Println(transition)
 		for k, m := range transition {
-			fmt.Println(k, []rune(k))
+			//fmt.Println(k, []rune(k))
 			if len(k) == 1 {
 				// loop through the target states of each symbol
 				for _, targetState := range m {
@@ -123,5 +123,21 @@ func Constructor(jsonInput utils.NFiniteAutomata) *NFA {
 	}
 
 	return nfa
+
+}
+func (nfa *NFA) PrintNFA() {
+	fmt.Println("States:", nfa.States)
+	fmt.Println("Symbols:", nfa.Symbols)
+	fmt.Println("Transitions:")
+	for _, state := range nfa.States {
+		fmt.Print(state)
+		fmt.Print(" -> [")
+		for symbol, transition := range nfa.Transitions[state] {
+			fmt.Print(" ", string(symbol), " : ", transition)
+		}
+		fmt.Println(" ]")
+	}
+	fmt.Println("StartState:", nfa.StartState.StateName)
+	fmt.Println("AcceptStates:", nfa.AcceptStates)
 
 }
