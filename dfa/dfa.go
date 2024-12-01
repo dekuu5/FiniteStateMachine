@@ -1,5 +1,8 @@
 package dfa
 
+/**
+ * description: This file contains the implementation of the DFA struct and its methods
+ */
 import (
 	"fmt"
 
@@ -37,8 +40,14 @@ type DFA struct {
 	AcceptStates []string
 }
 
+/**
+ * description: This function constructs the nodes of the DFA
+ * @param jsonInput: A FiniteAutomata struct that represents the DFA
+ * @return A pointer to the start state of the DFA
+ */
 func constructNodes(jsonInput utils.FiniteAutomata) *StateNode {
 	nodes := make(map[string]*StateNode)
+	// Loop through the states and create a StateNode for each state
 	for _, state := range jsonInput.States {
 		nodes[state] = &StateNode{
 			StateName:   state,
@@ -46,13 +55,13 @@ func constructNodes(jsonInput utils.FiniteAutomata) *StateNode {
 			IsAccepting: false,
 		}
 	}
-
+	// Loop through the accepting states and set the IsAccepting field to true
 	for _, acceptState := range jsonInput.AcceptStates {
 		if node, exists := nodes[acceptState]; exists {
 			node.IsAccepting = true
 		}
 	}
-
+	// Loop through the transitions and add the transitions to the nodes
 	for state, transition := range jsonInput.Transitions {
 		for symbol, targetState := range transition {
 			if len(symbol) == 1 {
@@ -60,24 +69,35 @@ func constructNodes(jsonInput utils.FiniteAutomata) *StateNode {
 			}
 		}
 	}
-
+	// Return the start state
 	return nodes[jsonInput.StartState]
 
 }
+
+/**
+ * description: This function constructs a DFA struct based on the given JSON input
+ * @param jsonInput: A FiniteAutomata struct that represents the DFA
+ * @return A pointer to the constructed DFA struct
+ */
 func Constructor(jsonInput utils.FiniteAutomata) *DFA {
+	// Construct the transitions map
 	transitions := make(map[string]map[rune]string)
 	for state, transition := range jsonInput.Transitions {
 		t := make(map[rune]string)
+		// Loop through the transitions for each state
 		for k, m := range transition {
 			if len(k) == 1 {
+				// Convert the key to a rune and add the transition to the map
 				t[rune(k[0])] = m
 			} else {
 				fmt.Printf("Skipping key '%s' because it's not a single character\n", k)
 			}
+			// Add the transitions map to the dfa transitions map
 			transitions[state] = t
 		}
 	}
 
+	// Construct the symbols slice
 	symbols := make([]rune, 0)
 	for _, c := range jsonInput.Symbols {
 		if len(c) == 1 {
@@ -86,6 +106,7 @@ func Constructor(jsonInput utils.FiniteAutomata) *DFA {
 			fmt.Printf("Skipping key '%s' because it's not a single character\n", c)
 		}
 	}
+	// Construct the DFA struct with the checked input
 	dfa := &DFA{
 		States:       jsonInput.States,
 		Symbols:      symbols,
@@ -93,26 +114,38 @@ func Constructor(jsonInput utils.FiniteAutomata) *DFA {
 		StartState:   constructNodes(jsonInput),
 		AcceptStates: jsonInput.AcceptStates,
 	}
-
+	// Return the constructed DFA struct
 	return dfa
 
 }
-func (dfa *DFA) PrintNFA() {
+
+/**
+ * description: Print the DFA struct
+ * @param dfa: a DFA struct that represents the DFA
+ */
+func (dfa *DFA) PrintDFA() {
+	// Print the DFA struct
+	//  Print the states
 	fmt.Println("States:", dfa.States)
+	// Print the symbols
 	fmt.Print("Symbols: [ ")
 	for _, symbol := range dfa.Symbols {
 		fmt.Print(string(symbol), " ")
 	}
 	fmt.Println(" ]")
+	// Print the transitions
 	fmt.Println("Transitions:")
 	for _, state := range dfa.States {
 		fmt.Print(state)
 		fmt.Print(" -> [")
+		// loop through the transitions for each state
 		for symbol, transition := range dfa.Transitions[state] {
+
 			fmt.Print(" ", string(symbol), " : ", transition)
 		}
 		fmt.Println(" ]")
 	}
+	// Print the start state and the accepting states
 	fmt.Println("StartState:", dfa.StartState.StateName)
 	fmt.Println("AcceptStates:", dfa.AcceptStates)
 
