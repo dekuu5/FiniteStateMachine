@@ -119,14 +119,3 @@ func processNfa(nfaJson nfa.NFiniteAutomata) {
 		fmt.Printf("String %s is rejected\n", symbols)
 	}
 }
-
-func printDfa(dfaJson dfa.DFA) {
-	fmt.Printf("States: %v\n", dfaJson.States)
-	fmt.Printf("Symbols: %v\n", dfaJson.Symbols)
-	fmt.Printf("Start State: %v\n", dfaJson.StartState)
-	fmt.Printf("Accept States: %v\n", dfaJson.AcceptStates)
-	fmt.Println("Transitions:")
-	for state, transitions := range dfaJson.Transitions {
-		fmt.Printf("  %s: %v\n", state, transitions)
-	}
-}

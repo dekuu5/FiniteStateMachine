@@ -127,7 +127,11 @@ func Constructor(jsonInput utils.NFiniteAutomata) *NFA {
 }
 func (nfa *NFA) PrintNFA() {
 	fmt.Println("States:", nfa.States)
-	fmt.Println("Symbols:", nfa.Symbols)
+	fmt.Print("Symbols: [ ")
+	for _, symbol := range nfa.Symbols {
+		fmt.Print(string(symbol), " ")
+	}
+	fmt.Println(" ]")
 	fmt.Println("Transitions:")
 	for _, state := range nfa.States {
 		fmt.Print(state)
