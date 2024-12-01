@@ -1,5 +1,8 @@
 package nfa
 
+/**
+ * description: the file contains the implementation of the NFA struct and its methods
+ */
 import (
 	"fmt"
 
@@ -71,6 +74,7 @@ func constructNodes(jsonInput utils.NFiniteAutomata) *StateNode {
 		}
 	}
 
+	// return the start state
 	return nodes[jsonInput.StartState]
 
 }
@@ -125,13 +129,21 @@ func Constructor(jsonInput utils.NFiniteAutomata) *NFA {
 	return nfa
 
 }
+
+/**
+ * description: Print the NFA struct
+ */
 func (nfa *NFA) PrintNFA() {
+	// Print the NFA struct
+	// Print the states
 	fmt.Println("States:", nfa.States)
+	// Print the symbols
 	fmt.Print("Symbols: [ ")
 	for _, symbol := range nfa.Symbols {
 		fmt.Print(string(symbol), " ")
 	}
 	fmt.Println(" ]")
+	// Print the transitions
 	fmt.Println("Transitions:")
 	for _, state := range nfa.States {
 		fmt.Print(state)
@@ -141,6 +153,7 @@ func (nfa *NFA) PrintNFA() {
 		}
 		fmt.Println(" ]")
 	}
+	// Print the start state and accepting states
 	fmt.Println("StartState:", nfa.StartState.StateName)
 	fmt.Println("AcceptStates:", nfa.AcceptStates)
 

@@ -1,8 +1,24 @@
 package nfa
 
+/**
+ * description: the file contains the functions that validate an input string based on the NFA:
+ * 1. The input string must be valid based on the set of input symbols.
+ * 2. The function should build a parse tree based on the input string and the NFA.
+ * 3. The function should validate the input string based on the parse tree.
+ */
+
 import (
 	"fmt"
 )
+
+/**
+ * this struct represents a node in the parse tree
+ * it has the following fields:
+ * value: the name of the node
+ * children: a slice of pointers to child nodes
+ * accepting: a boolean that indicates if the node is an accepting state
+ * symbol: a rune that represents the symbol that leads to the child node
+ */
 
 type treeNode struct {
 	value     string
@@ -11,7 +27,13 @@ type treeNode struct {
 	symbol    rune
 }
 
+/**
+ * description: This function validates the input string based on the NFA.
+ * @param input: A string that represents the input string
+ * @return A boolean that indicates if the input string is valid
+ */
 func (nfa *NFA) ValidateString(input string) bool {
+	//parse the input string and build the parse tree
 	tree := nfa.ParseTree(input)
 	//check if the tree is nil
 	if tree == nil {
@@ -64,6 +86,12 @@ func (nfa *NFA) ValidateString(input string) bool {
 	// start traversing the tree from the start state
 	return traverseTree(tree)
 }
+
+/**
+ * description: Parse the input string and build the parse tree based on the NFA
+ * @param : the string representation of the input
+ * @return : the root node of the parse tree
+ */
 func (nfa *NFA) ParseTree(input string) *treeNode {
 	//initialize the stack
 	stack := NewStack()
@@ -126,6 +154,11 @@ func (nfa *NFA) ParseTree(input string) *treeNode {
 
 }
 
+/**
+ * description: Check if the input string is valid based on the set of input symbols
+ * @param input: A string that represents the input string
+ * @return A boolean that indicates if the input string is valid
+ */
 func (nfa *NFA) IsInputStringValid(input string) bool {
 	for _, char := range input {
 		if !containsSymbol(nfa.Symbols, char) {
@@ -136,7 +169,12 @@ func (nfa *NFA) IsInputStringValid(input string) bool {
 	return true
 }
 
-// containsSymbol checks if a symbol is in the list of symbols
+/**
+ * description: Check if a character is in the set of input symbols
+ * @param symbols: A slice of runes that represents the set of input symbols
+ * @param char: A rune that represents the character to check
+ * @return A boolean that indicates if the character is in the set of input symbols
+ */
 func containsSymbol(symbols []rune, char rune) bool {
 	for _, symbol := range symbols {
 		if symbol == char {
@@ -146,7 +184,9 @@ func containsSymbol(symbols []rune, char rune) bool {
 	return false
 }
 
-// print the tree for debugging purposes with tree format
+/**
+ * description: Print the tree
+ */
 func (node *treeNode) PrintTree() {
 	fmt.Print("Node Value: ", node.value)
 	fmt.Print(" Accepting: ", node.accepting)
@@ -157,6 +197,9 @@ func (node *treeNode) PrintTree() {
 	}
 }
 
+/**
+ * description: Print the tree node
+ */
 func (node *treeNode) PrintTreeNode() {
 	fmt.Print("Node Value: ", node.value)
 	fmt.Print(" Accepting: ", node.accepting)

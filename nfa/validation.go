@@ -7,8 +7,6 @@ package nfa
  * 3. The set of input symbols must not be empty.
  * 4. The set of accept states must not be empty and must be a subset of the set of states.
  * 5. Each state may have transitions for each input symbol, and the next states must be in the set of states or no transitions at all.
- * @param nfa: A NFA struct that represents the NFA
- * @return A boolean that indicates if the NFA is valid
  */
 
 import (
@@ -32,6 +30,12 @@ func ValidateNfa(nfa utils.NFiniteAutomata) bool {
 		validateTransitions(nfa) // check if the transitions are valid based on the set of states and input symbols
 }
 
+/**
+ * This function validates the set of states of the NFA
+ * @param nfa: A NFiniteAutomata struct that represents the NFA
+ * @error: If the set of states is empty
+ * @return A boolean that indicates if the set of states is valid
+ */
 func validateStates(nfa NFiniteAutomata) bool {
 	if len(nfa.States) == 0 {
 		log.Println("Set of states is empty")
@@ -40,6 +44,12 @@ func validateStates(nfa NFiniteAutomata) bool {
 	return true
 }
 
+/**
+ * This function validates the start state of the NFA
+ * @param nfa: A NFiniteAutomata struct that represents the NFA
+ * @error: If the start state is not in the set of states
+ * @return A boolean that indicates if the start state is valid
+ */
 func validateStartState(nfa NFiniteAutomata) bool {
 	for _, state := range nfa.States {
 		if state == nfa.StartState {
@@ -50,6 +60,12 @@ func validateStartState(nfa NFiniteAutomata) bool {
 	return false
 }
 
+/**
+ * This function validates the set of input symbols of the NFA
+ * @param nfa: A NFiniteAutomata struct that represents the NFA
+ * @error: If the set of input symbols is empty
+ * @return A boolean that indicates if the set of input symbols is valid
+ */
 func validateSymbols(nfa NFiniteAutomata) bool {
 	if len(nfa.Symbols) == 0 {
 		log.Println("Set of inputs is empty")
@@ -57,6 +73,13 @@ func validateSymbols(nfa NFiniteAutomata) bool {
 	}
 	return true
 }
+
+/**
+ * This function validates the set of accept states of the NFA
+ * @param nfa: A NFiniteAutomata struct that represents the NFA
+ * @error: If the set of accept states is empty or not a subset of the set of states
+ * @return A boolean that indicates if the set of accept states is valid
+ */
 
 func validateAcceptStates(nfa NFiniteAutomata) bool {
 	if len(nfa.AcceptStates) == 0 {
@@ -72,6 +95,12 @@ func validateAcceptStates(nfa NFiniteAutomata) bool {
 	return true
 }
 
+/**
+ * This function validates the transitions of the NFA
+ * @param nfa: A NFiniteAutomata struct that represents the NFA
+ * @error: If the transitions are not valid based on the set of states and input symbols
+ * @return A boolean that indicates if the transitions are valid
+ */
 func validateTransitions(nfa NFiniteAutomata) bool {
 	for state, transitions := range nfa.Transitions {
 		if !stateExists(nfa.States, state) {
@@ -94,6 +123,12 @@ func validateTransitions(nfa NFiniteAutomata) bool {
 	return true
 }
 
+/**
+ * description: Check if the state exists in the set of states
+ * @param states: A slice of strings that represents the set of states
+ * @param state: A string that represents the state
+ * @return A boolean that indicates if the state exists in the set of states
+ */
 func stateExists(states []string, state string) bool {
 	for _, s := range states {
 		if s == state { // if the state exists in the set of states
@@ -103,6 +138,11 @@ func stateExists(states []string, state string) bool {
 	return false
 }
 
+/**
+ * description: Check if the input string is valid based on the set of input symbols
+ * @param input: A string that represents the input string
+ * @return A boolean that indicates if the input string is valid
+ */
 func symbolExists(symbols []string, symbol string) bool {
 	for _, s := range symbols {
 		if s == symbol {

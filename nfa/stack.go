@@ -1,9 +1,11 @@
 package nfa
 
+// Stack represents a stack data structure
 type Stack struct {
 	data []interface{}
 }
 
+// NewStack creates a new stack
 func NewStack() *Stack {
 	return &Stack{data: []interface{}{}}
 }
