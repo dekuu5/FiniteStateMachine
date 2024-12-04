@@ -50,6 +50,7 @@ func (nfa *NFA) ValidateString(input string) bool {
 	var traverseTree func(currentNode *treeNode) bool
 	traverseTree = func(currentNode *treeNode) bool {
 		poped := false
+		//
 		//base case: when the current node is an accepting state
 		if stack.IsEmpty() {
 			return currentNode.accepting
