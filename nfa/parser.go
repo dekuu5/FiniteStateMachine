@@ -188,10 +188,9 @@ func containsSymbol(symbols []rune, char rune) bool {
  * description: Print the tree
  */
 func (node *treeNode) PrintTree() {
-	fmt.Print("Node Value: ", node.value)
-	fmt.Print(" Accepting: ", node.accepting)
-	fmt.Print(" Symbol:", string(node.symbol))
-	fmt.Print(" Children: ")
+	//print the tree node
+	node.PrintTreeNode()
+	// Recursively print the children of the node
 	for _, child := range node.children {
 		child.PrintTree()
 	}

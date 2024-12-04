@@ -128,6 +128,8 @@ func processNfa(nfaJson nfa.NFiniteAutomata) {
 			fmt.Println("The input string is valid")
 			return
 		}
+		tree := nfaTree.ParseTree(symbols)
+		tree.PrintTree()
 
 		if valid := nfaTree.ValidateString(symbols); valid {
 			fmt.Printf("String %s is accepted\n", symbols)
